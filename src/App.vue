@@ -88,6 +88,7 @@ export default {
 		SecretEditor
 	},
 	data() {
+
 		return {
 			secrets: [],
 			currentSecretUUId: null,
@@ -136,13 +137,23 @@ export default {
 	 */
 	async mounted() {
 		try {
-			const response = await axios.get(generateUrl('/apps/secrets/secrets'))
+			const response = await axios.get(generateUrl('/apps/secrets/s/secrets'))
 			this.secrets = response.data;
 		} catch (e) {
 			console.error(e)
 			showError(t('secrets', 'Could not fetch secrets'))
 		}
-		this.loading = false
+		const trimmedPath = window.location.pathname.replace(/\/$/, '');
+		const tailSepIndex = trimmedPath.lastIndexOf("/");
+		let pathTail = trimmedPath.substring(tailSepIndex + 1);
+		if (pathTail !== "secrets") {
+			if (this.secrets.findIndex((secret) => secret.uuid === pathTail) !== -1) {
+				this.currentSecretUUId = pathTail
+			} else {
+				console.warn(`No such secret: ${pathTail}`);
+			}
+		}
+		this.loading = false;
 	},
 
 	methods: {
@@ -224,7 +235,7 @@ export default {
 					encrypted: await encryptedPromise,
 					iv: String.fromCharCode.apply(null, secret.iv)
 				};
-				const response = await axios.post(generateUrl('/apps/secrets/secrets'), encryptedSecret)
+				const response = await axios.post(generateUrl('/apps/secrets/s/secrets'), encryptedSecret)
 				const decrypted = await this.$cryptolib.decrypt(
 					response.data.encrypted,
 					secret.key,
@@ -252,7 +263,7 @@ export default {
 			try {
 				if (!secret.uuid)
 					throw new Error("Secret has no UUID!");
-				await axios.delete(generateUrl(`/apps/secrets/secrets/${secret.uuid}`))
+				await axios.delete(generateUrl(`/apps/secrets/s/secrets/${secret.uuid}`))
 				this.secrets.splice(this.secrets.indexOf(secret), 1)
 				if (this.currentSecretUUId === secret.uuid) {
 					this.currentSecretUUId = null
@@ -266,7 +277,7 @@ export default {
 		},
 		async updateSecretTitle(secret, title) {
 			if (secret.uuid) {
-				await axios.put(generateUrl(`/apps/secrets/secrets/${secret.uuid}/title`), {title: title});
+				await axios.put(generateUrl(`/apps/secrets/s/secrets/${secret.uuid}/title`), {title: title});
 			}
 			secret.title = title;
 		}
@@ -286,5 +297,11 @@ export default {
 	width: 100%;
 	border-radius: var(--body-container-radius);
 	overflow: hidden;
+}
+
+@media only screen and (max-width: 512px) {
+	.app-navigation {
+		top: 40px;
+	}
 }
 </style>

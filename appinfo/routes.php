@@ -15,11 +15,11 @@ declare(strict_types=1);
 return [
 	'routes' => [
 		['name' => 'page#index', 'url' => '/', 'verb' => 'GET'],
-		['name' => 'secret#index', 'url' => '/secrets', 'verb' => 'GET'],
-		['name' => 'secret#show', 'url' => '/secrets/{uuid}', 'verb' => 'GET'],
-		['name' => 'secret#create', 'url' => '/secrets', 'verb' => 'POST'],
-		['name' => 'secret#delete', 'url' => '/secrets/{uuid}', 'verb' => 'DELETE'],
-		['name' => 'secret#updateTitle', 'url' => '/secrets/{uuid}/title', 'verb' => 'PUT'],
+		['name' => 'page#show', 'url' => '/{uuid}', 'verb' => 'GET'],
+		['name' => 'secret#index', 'url' => '/s/secrets', 'verb' => 'GET'],
+		['name' => 'secret#create', 'url' => '/s/secrets', 'verb' => 'POST'],
+		['name' => 'secret#delete', 'url' => '/s/secrets/{uuid}', 'verb' => 'DELETE'],
+		['name' => 'secret#updateTitle', 'url' => '/s/secrets/{uuid}/title', 'verb' => 'PUT'],
 
 		['name' => 'SecretApi#getSecret', 'url' => '/api/get', 'verb' => 'POST'],
 

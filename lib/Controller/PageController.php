@@ -20,10 +20,23 @@ class PageController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
+	 *
+	 * @return TemplateResponse
 	 */
 	public function index(): TemplateResponse {
 		Util::addScript(Application::APP_ID, 'secrets-main');
 
 		return new TemplateResponse(Application::APP_ID, 'main');
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 *
+	 * @param string $uuid
+	 * @return TemplateResponse
+	 **/
+	public function show(string $uuid): TemplateResponse {
+		return $this->index();
 	}
 }
